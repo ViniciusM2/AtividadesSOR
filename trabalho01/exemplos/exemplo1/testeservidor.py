@@ -18,3 +18,4 @@ while True:
     currentTime = time.ctime(time.time()) + "\r\n"
     clientsocket.send(currentTime.encode('ascii'))
     clientsocket.close()
+#TESTE
