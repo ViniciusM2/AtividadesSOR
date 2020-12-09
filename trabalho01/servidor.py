@@ -36,10 +36,13 @@ while True:
         # establish a connection
         clientsocket, addr = serversocket.accept()
         print("Got a connection from %s" % str(addr))
-        tmp = serversocket.recv(1024)
+        tmp = clientsocket.recv(1024)
+        
         pedido = tmp.decode('utf-8')
         pedido = pedido.strip()
         pedido = pedido.split(';')
+        print(pedido)
+        input('45 CONTINUAR')
         #
         grandeza = mapa_grandeza[int(pedido[0])]
         origem = None
@@ -57,7 +60,7 @@ while True:
             raise Exception()
         entrada = float(pedido[3])
         resposta = conversor.convert(entrada, origem, destino)
-        clientsocket.send("{resposta}\r\n\r\n".encode('utf-8'))
+        clientsocket.send(f"{resposta}\r\n\r\n".encode('utf-8'))
 
         #
         conversor = None

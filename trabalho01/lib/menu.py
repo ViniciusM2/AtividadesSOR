@@ -226,7 +226,7 @@ class Manager:
                 origem = opcoes[1]
                 destino = opcoes[2]
                 entrada = opcoes[3]
-                data = "{grandeza};{origem};{destino};{entrada}\r\n\r\n"
+                data = f"{grandeza.value[1]};{origem.value[1]};{destino.value[1]};{entrada}\r\n\r\n"
                 s.send(data.encode('utf-8'))
                 print('Cheguei na linha 231 do menu')
                 resposta_buffer = s.recv(1024)
