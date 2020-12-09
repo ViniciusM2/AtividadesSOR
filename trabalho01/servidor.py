@@ -42,7 +42,7 @@ while True:
         pedido = pedido.strip()
         pedido = pedido.split(';')
         print(pedido)
-        input('45 CONTINUAR')
+        # input('45 CONTINUAR')
         #
         grandeza = mapa_grandeza[int(pedido[0])]
         origem = None
@@ -66,12 +66,12 @@ while True:
         conversor = None
 
         # clientsocket.send(currentTime.encode('utf-8'))
-        input('Terminar sessão?')
+        # input('Terminar sessão?')
         clientsocket.close()
     except Exception as e:
         print(e)
         clientsocket.close()
-        input('')
+        # input('')
         break
-print('Servidor Morreu!')
+# print('Servidor Morreu!')
 # TESTE

@@ -13,6 +13,7 @@ class Manager:
 
     @classmethod
     def menu_inicial(cls):
+        os.system('cls')
         linha()
         print("+{:^125}+".format('Bem-vindo ao conversor de medidas'))
         linha()
@@ -228,13 +229,17 @@ class Manager:
                 entrada = opcoes[3]
                 data = f"{grandeza.value[1]};{origem.value[1]};{destino.value[1]};{entrada}\r\n\r\n"
                 s.send(data.encode('utf-8'))
-                print('Cheguei na linha 231 do menu')
+                # print('Cheguei na linha 231 do menu')
                 resposta_buffer = s.recv(1024)
-                print('Cheguei na linha 232 do menu')
-                s.close()
+                # print('Cheguei na linha 232 do menu')
+                # s.close()
                 if resposta_buffer:
                     resposta = resposta_buffer.decode('utf-8')
-                    print("{:^127}".format(f"{resposta}"))
+                    resposta = resposta.strip()
+                    print("{:^127}".format(f"Resultado: {resposta} {Manager.destino.value[0]}"))
+                    print("{:^127}".format(f"Aperte ENTER para voltar ao Menu Inicial"))
+                    op = input(' '*62)
+                    Manager.menu_inicial()
             
 
         except Exception as e:
