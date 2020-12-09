@@ -1,12 +1,15 @@
 import colorama
 import os
 from lib.servidor.conversor import VolumeUnit, SpeedUnit, AllowedGrandezas
+import socket
 # TESTE
+
 
 class Manager:
     grandeza = None
     origem = None
     destino = None
+    entrada = None
 
     @classmethod
     def menu_inicial(cls):
@@ -64,13 +67,13 @@ class Manager:
                     os.system('cls')
                     if op == 1:
                         Manager.origem = SpeedUnit.mph
-                        
+
                     elif op == 2:
                         Manager.origem = SpeedUnit.mps
-                      
+
                     elif op == 3:
                         Manager.origem = SpeedUnit.kmph
-                       
+
                     else:
                         Manager.origem = None
                         raise IOError()
@@ -202,15 +205,42 @@ class Manager:
     def insere_dados(self):
         try:
             linha()
-            print("+{:^125}+".format(f'A conversão realizada será da grandeza {Manager.grandeza.value[0]} partindo da unidade {Manager.origem.value[0]} para a unidade {Manager.destino.value[0]}'))
+            print(
+                "+{:^125}+".format(f'A conversão realizada será da grandeza {Manager.grandeza.value[0]} partindo da unidade {Manager.origem.value[0]} para a unidade {Manager.destino.value[0]}'))
             linha()
-            print("+{:^125}+".format(f"Insira o valor a ser convertido, em {Manager.origem.value[0]}"))
-            x = float(input(' '*62))
-        except:
+            print(
+                "+{:^125}+".format(f"Insira o valor a ser convertido, em {Manager.origem.value[0]}"))
+            Manager.entrada = float(input(' '*62))
+
+            opcoes = Manager.grandeza, Manager.origem, Manager.destino, Manager.entrada
+
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # get local machine name
+            host = '127.0.0.1'
+            port = 9999
+            # connection to hostname on the port.
+            s.connect((host, port))
+
+            if opcoes:
+                grandeza = opcoes[0]
+                origem = opcoes[1]
+                destino = opcoes[2]
+                entrada = opcoes[3]
+                data = "{grandeza};{origem};{destino};{entrada}\r\n\r\n"
+                s.send(data.encode('utf-8'))
+                print('Cheguei na linha 231 do menu')
+                resposta_buffer = s.recv(1024)
+                print('Cheguei na linha 232 do menu')
+                s.close()
+                if resposta_buffer:
+                    resposta = resposta_buffer.decode('utf-8')
+                    print("{:^127}".format(f"{resposta}"))
+            
+
+        except Exception as e:
+            print(e)
             Manager.opcao_invalida()
-
-        
-
+            s.close()
 
     @classmethod
     def opcao_invalida(cls):
@@ -231,9 +261,7 @@ def linha():
           '+'+'-'*20+'+'+'-'*20+'+'+'-'*20+'+')
 
 
-def desenhar_primeiro_menu():
+def desenhar_menu():
     colorama.init()
     Manager.menu_inicial()
-
-
-desenhar_primeiro_menu()
+    return Manager.grandeza, Manager.origem, Manager.destino, Manager.entrada
