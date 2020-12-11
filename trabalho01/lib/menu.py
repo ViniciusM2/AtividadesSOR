@@ -2,6 +2,7 @@ import colorama
 import os
 from lib.servidor.conversor import VolumeUnit, SpeedUnit, AllowedGrandezas
 import socket
+import sys 
 # TESTE
 
 
@@ -23,6 +24,8 @@ class Manager:
         linha()
         print("+{:^125}+".format("2 - volume"))
         linha()
+        print("+{:^125}+".format("0 - sair da aplicação"))
+        linha()
         print("{:^127}".format("Sua opção:"))
         try:
             op = int(input(' '*62))
@@ -33,14 +36,17 @@ class Manager:
             elif op == 2:
                 Manager.grandeza = AllowedGrandezas.volume
                 Manager.escolhe_origem(AllowedGrandezas.volume)
+            elif op == 0:
+                return
             else:
                 Manager.grandeza = None
                 raise IOError()
             #
             #
-
-        except:
+        except Exception as e:
             Manager.opcao_invalida()
+            if isinstance(e, SystemExit):
+                raise SystemExit
 
     @classmethod
     def escolhe_origem(self, grandeza):
@@ -251,9 +257,9 @@ class Manager:
     def opcao_invalida(cls):
         os.system('cls')
         linha()
-        print("{:^127}".format(f"Opção inválida!"))
+        print("{:^127}".format(f"Erro!!"))
         linha()
-        print("{:^127}".format("Aperte ENTER para continuar"))
+        print("{:^127}".format("Aperte ENTER para voltar ao menu inicial"))
         linha()
         input(' '*62)
         os.system('cls')
