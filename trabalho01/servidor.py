@@ -60,7 +60,7 @@ while True:
             raise Exception()
         entrada = float(pedido[3])
         resposta = conversor.convert(entrada, origem, destino)
-        clientsocket.send(f"{resposta}\r\n\r\n".encode('utf-8'))
+        clientsocket.send(f"{resposta}".encode('utf-8'))
 
         #
         conversor = None

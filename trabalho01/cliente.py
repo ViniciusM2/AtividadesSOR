@@ -12,7 +12,6 @@ import socket
 
 #draw menu
 opcoes = desenhar_menu()
-
 # if opcoes:
 #     grandeza = opcoes[0]
 #     origem = opcoes[1]
@@ -27,4 +26,4 @@ opcoes = desenhar_menu()
 #         print("{:^127}".format(f"{resposta}"))
 
     
-
+    

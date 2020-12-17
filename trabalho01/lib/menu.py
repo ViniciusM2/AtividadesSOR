@@ -1,4 +1,6 @@
-import colorama
+# import colorama
+from datetime import datetime
+from logger import Logger
 import os
 from lib.servidor.conversor import VolumeUnit, SpeedUnit, AllowedGrandezas
 import socket
@@ -24,9 +26,13 @@ class Manager:
         linha()
         print("+{:^125}+".format("2 - volume"))
         linha()
+        print("+{:^125}+".format("3 - Ver os registros."))
+        linha()
         print("+{:^125}+".format("0 - sair da aplicação"))
         linha()
         print("{:^127}".format("Sua opção:"))
+       
+        
         try:
             op = int(input(' '*62))
             os.system('cls')
@@ -36,6 +42,8 @@ class Manager:
             elif op == 2:
                 Manager.grandeza = AllowedGrandezas.volume
                 Manager.escolhe_origem(AllowedGrandezas.volume)
+            elif op == 3:
+                Logger.LerArquivo()
             elif op == 0:
                 return
             else:
@@ -69,27 +77,27 @@ class Manager:
                 print("+{:^125}+".format(f'3 - {nomeunidade}'))
                 linha()
                 print("{:^127}".format("Sua opção:"))
-                try:
-                    op = int(input(' '*62))
-                    os.system('cls')
-                    if op == 1:
-                        Manager.origem = SpeedUnit.mph
+            #try:
+                op = int(input(' '*62))
+                os.system('cls')
+                if op == 1:
+                    Manager.origem = SpeedUnit.mph
 
-                    elif op == 2:
-                        Manager.origem = SpeedUnit.mps
+                elif op == 2:
+                    Manager.origem = SpeedUnit.mps
 
-                    elif op == 3:
-                        Manager.origem = SpeedUnit.kmph
+                elif op == 3:
+                    Manager.origem = SpeedUnit.kmph
 
-                    else:
-                        Manager.origem = None
-                        raise IOError()
-                    Manager.escolhe_destino(AllowedGrandezas.speed)
-                    #
-                    #
+                else:
+                    Manager.origem = None
+                    raise IOError()
+                Manager.escolhe_destino(AllowedGrandezas.speed)
+                #
+                #
 
-                except:
-                    Manager.opcao_invalida()
+                #except:
+                Manager.opcao_invalida()
             elif grandeza == AllowedGrandezas.volume:
                 nomeunidade = VolumeUnit.m3.value[0]
                 print("+{:^125}+".format(f'1 - {nomeunidade}'))
@@ -208,6 +216,7 @@ class Manager:
         except:
             Manager.opcao_invalida()
 
+
     @classmethod
     def insere_dados(self):
         try:
@@ -233,7 +242,7 @@ class Manager:
                 origem = opcoes[1]
                 destino = opcoes[2]
                 entrada = opcoes[3]
-                data = f"{grandeza.value[1]};{origem.value[1]};{destino.value[1]};{entrada}\r\n\r\n"
+                data = f"{grandeza.value[1]};{origem.value[1]};{destino.value[1]};{entrada}"
                 s.send(data.encode('utf-8'))
                 # print('Cheguei na linha 231 do menu')
                 resposta_buffer = s.recv(1024)
@@ -243,8 +252,11 @@ class Manager:
                     resposta = resposta_buffer.decode('utf-8')
                     resposta = resposta.strip()
                     print("{:^127}".format(f"Resultado: {resposta} {Manager.destino.value[0]}"))
+                    print("{:^127}".format(f"Would you like to save your conversion?[S/s para sim]"))
                     print("{:^127}".format(f"Aperte ENTER para voltar ao Menu Inicial"))
                     op = input(' '*62)
+                    if op == 'S' or op == 's':
+                        Logger.salvarArquivo(f'{datetime.now()};{data};{resposta}')
                     Manager.menu_inicial()
             
 
@@ -273,6 +285,6 @@ def linha():
 
 
 def desenhar_menu():
-    colorama.init()
+    # colorama.init()
     Manager.menu_inicial()
     return Manager.grandeza, Manager.origem, Manager.destino, Manager.entrada
